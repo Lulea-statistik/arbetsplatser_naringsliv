@@ -6,7 +6,8 @@ import collections,json,os,time,urllib.parse,urllib.request,urllib.error,datetim
 BASE="https://apiafr.scb.se/v1"
 LIMIT=2000
 BUDGET=30
-MAX_EXTRA_LOOKUPS=12
+MAX_EXTRA_LOOKUPS=0
+# Pilot additional legal entities headquartered in Norrbotten county (25).
 calls=0
 last=0.0
 
@@ -67,6 +68,20 @@ def main():
             if org in units:raise RuntimeError("Duplicate legal unit key")
             units[org]=(str(unit.get("jurform") or ""),bool(unit.get("namn")))
         print("Legal-unit page",page_no,"total",len(units),flush=True)
+    # The Lulea municipality is a subset of Norrbotten county.
+    # Batch-fetch county records to improve coverage without individual lookups.
+    county_count=0
+    county_added=0
+    for rows,page_no in pages("/juridiskaenheter/lan/25",key):
+        county_count+=len(rows)
+        for unit in rows:
+            org=unit.get("peOrgNr")
+            if not isinstance(org,str) or not org:raise RuntimeError("Missing county legal unit key")
+            if org not in units:
+                units[org]=(str(unit.get("jurform") or ""),bool(unit.get("namn")))
+                county_added+=1
+        print("County legal-unit page",page_no,"cumulative",county_count,flush=True)
+    print("County additional unique legal entities:",county_added,flush=True)
     total=len(workplaces)
     links={org for org,_ in workplaces.values()}
     matched=links & units.keys()
@@ -98,7 +113,7 @@ def main():
         else:
             categories["ej_matchad"]+=1
     print("Full workplace total:",total,"distinct legal unit links:",len(links))
-    print("Legal entities with registered office Lulea:",len(units))
+    print("Legal entities in combined municipality/county batch:",len(units))
     print("Matched workplace units:",len(matched),"unmatched units:",len(unmatched))
     print("Matched workplace rows:",matched_workplaces,"unmatched rows:",total-matched_workplaces)
     print("Workplace classification counts:",dict(sorted(categories.items())))
@@ -110,7 +125,7 @@ def main():
             "fetched_at":datetime.datetime.now(datetime.timezone.utc).date().isoformat(),
             "source":"SCB, allmänna företagsregistret – egen bearbetning",
             "workplace_count":total,
-            "scope":"Juridiska enheter med säte i Luleå; omatchade inkluderar andra säteskommuner",
+            "scope":"Juridiska enheter med säte i Norrbottens län; omatchade kan ha säte utanför länet",
             "juridisk_form_groups":dict(sorted(categories.items())),
             "match_rate_workplaces":round(matched_workplaces/total,6),
             "matched_workplaces_without_name_with_legal_unit_name":missing_names["enhetsnamn_finns"],
