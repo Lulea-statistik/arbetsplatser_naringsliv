@@ -1,33 +1,26 @@
 # Arbetsställen i Luleå kommun
 
-Publik arbetsställeöversikt för **Luleå kommun (SCB kommunkod 2580)**.
+Publik översikt för SCB:s allmänna företagsregister, arbetsställets kommunkod **2580**.
 
-## Status
+## Aktuell status
+- Nya SCB-API:t på `https://apiafr.scb.se` är verifierat. Autentisering med GitHub-secret `SCB_API_KEY` i headern `X-API-Key`.
+- Den 14 oktober 2026 hämtades **13 965 arbetsställen** och antalet stämde med SCB:s count.
+- Webbplatsen visar offentliga aggregerade kategorifördelningar för anställdklass, arbetsställestatus, SNI-avdelning och reklamspärr.
+- Enskilda företagsnamn, personnummer, organisationsnummer och adresser publiceras inte.
+- En **månadsvis aggregerad historik med ändringslogg** är implementerad men behöver första verifierade månads-körningen.
 
-Webbsidan `docs/index.html` är på plats. En autentiserad SCB-koppling är förberedd via GitHub Actions men **ingen aktuell arbetsställedata har ännu hämtats** och anslutningen är därför inte verifierad. Webbplatsen visar detta tydligt och hittar inte på antal eller adresser.
+## Webbplats och data
+- Webb: https://lulea-statistik.github.io/arbetsplatser_naringsliv/
+- Senaste sammanställning: `docs/data/scb_lulea_aggregate.json`
+- Månadsbilder efter första månadskörning: `docs/data/history/YYYY-MM.json`
+- Gles förändringslogg: `docs/data/scb_monthly_changes.json`
 
-SCB:s allmänna företagsregister har ett avgiftsfritt API med personligt tilldelad API-nyckel: https://www.scb.se/vara-tjanster/bestall-data-och-statistik/foretagsregistret/avgiftsfria-uppgifter-i-foretagsregistret/ . Ansök via https://registreraafr.scb.se/ och läs **den aktuella OpenAPI-specifikationen** för sökning på arbetsställen och kommun.
+## Schemalagd hämtning
+Använd GitHub Actions-flödet **Hämta aggregerad arbetsställestatistik Luleå**. Det körs den **5:e i månaden kl. 08:10 UTC** eller manuellt via `workflow_dispatch`. Varje körning har egen hård budget på **20 anrop** inklusive återförsök och en lägre takt än SCB:s avtalsgräns **5 anrop/sekund**. Detta är **inte** en central timkvot över flera flöden.
 
-## Koppla på API:et
+Läs [körningsstrategin](docs/KORNINGSSTRATEGI-SCB.md) för historikens semantik och skillnaden mellan aggregerade och individuella förändringar.
 
-Lägg till GitHub Actions *repository secrets* under **Settings → Secrets and variables → Actions**:
+## Viktigt om GDPR
+API-svaren kan innehålla personuppgifter för fysiska personer. Offentlig historik innehåller inga enskilda poster. Ett framtida företagsvis historik-/kartlager kräver separat integritetsbedömning och skyddad lagring; en hash eller ersatt `peOrgNr` ger inte automatisk anonymitet. Källan är **SCB, allmänna företagsregistret – egen bearbetning**.
 
-- `SCB_API_KEY`: personlig API-nyckel (lägg den aldrig i webbplatsens JavaScript, issues, datafiler eller chatt)
-- `SCB_API_URL`: fullständig HTTPS-sökendpoint för arbetsställen från SCB:s dokumentation
-- `SCB_API_QUERY_JSON`: JSON-anropskropp **enligt SCB:s faktiska OpenAPI-schema**, filtrerad på arbetsställets kommun **2580 (Luleå)**. Ett godtyckligt/ogranskat frågeformat fungerar inte.
-
-Valfria repository variables: `SCB_API_METHOD` (standard POST) och `SCB_API_KEY_HEADER` (standard x-api-key); anpassa till SCB:s officiella dokumentation.
-
-Starta **Actions → Hämta SCB arbetsställen Luleå → Run workflow**. Schemat är måndagar. Hämtningen stoppar publicering om ett kommunfält inte verifieras, om svarets form inte kan läsas, eller om en sida kan vara ofullständig (5 000 rader). Ett komplett kommunuttag kräver paginering om fler än 5 000 poster finns. Mappningen av SCB:s nya fältnamn behöver fortfarande jämföras mot ett riktigt API-svar innan kopplingen kan beskrivas som driftsatt.
-
-**Viktigt före publicering:** kontrollera SCB:s användarvillkor, vidareutnyttjande av registeruppgifter och personuppgifter för enskilda näringsidkare. Den inbyggda utmatningen omfattar namn, besöksadress, SNI och anställdklass, och får inte betraktas som juridiskt godkänd enbart för att API:t ger en träff. Ingen koordinatgeokodning är implementerad ännu.
-
-## Publicering
-
-Publicera från `main` / `docs` under **Settings → Pages** om GitHub Pages inte redan är aktiverat.
-
-Ingen API-nyckel exponeras i Pages-sidan. Efter genomförd och godkänd hämtning läses `docs/data/arbetsstallen_lulea.json` som sökbar lista.
-
-## SCB:s API-användarvillkor
-
-Användarvillkoren som projektägaren tillhandahållit finns sparade i [docs/SCB-API-ANVANDARVILLKOR.md](docs/SCB-API-ANVANDARVILLKOR.md). De anger bland annat **högst 5 API-anrop per sekund och nyckel**, att API-nyckeln är personlig och inte får delas, samt att registeruppgifterna får spridas med **SCB som källa** (och upplysning om egen bearbetning när sådan gjorts). GDPR-ansvar och krav på information om **reklamspärr** gäller fortfarande. Dokumentation av villkoren innebär inte att de har signerats eller att nyckel finns.
+Avtalsunderlag: [SCB:s användarvillkor](docs/SCB-API-ANVANDARVILLKOR.md).
