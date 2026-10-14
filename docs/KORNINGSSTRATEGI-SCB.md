@@ -37,3 +37,22 @@ Ett framtida företagsvis deltaformat, där oförändrade variabler ärvs från 
 - Planerad utökning efter granskning: kodtexter från SCB, bransch och region på lämplig aggregeringsnivå, kontroll av uppdateringsdatum/källbryt, nyckelhantering och statistik över datakvalitet.
 - Källhänvisning: **SCB, allmänna företagsregistret – egen bearbetning**.
 - SCB:s avtalsvillkor finns i `docs/SCB-API-ANVANDARVILLKOR.md`.
+
+
+## Bootstrap på arbetsställenivå: genomförd förberedelse, inte aktiverad lagring
+
+Det separata manuella flödet **SCB – Bootstrap (säker kontroll)** använder `bootstrap_scb_readiness.py` och hämtar alla kommunens arbetsställen enbart i körningsminnet. Det kontrollerar:
+- `count` mot summering av alla sidor och unika CFAR, inklusive dubblettkontroll
+- att relevanta fält finns, utan att logga deras innehåll
+- budget om 20 anrop per körning och minst 0,55 sekunder mellan anrop
+
+Körningen skriver **inga råposter, ID:n eller arbetsställebaserade historikfiler** till repositoryt, till artefakter eller till loggen. **Detta är ett diagnosflöde, inte ett driftsatt privat datalager.**
+
+För en riktig, återläsbar bootstrap med arbetsställevisa förändringar krävs före aktivering:
+1. Godkänd rättslig grund och överförings-/biträdesbedömning för SCB-personuppgifter, även i GitHub Actions körmiljö.
+2. En behörighetsstyrd lagringsplats med rätt geografisk datalokalisering, retention, kryptering och åtkomstloggning.
+3. Verifierad klassificering av juridisk person kontra fysisk person via juridisk enhetsinformation; `peOrgNr` som bara råkar ha formatet organisationsnummer är inte tillräcklig granskning.
+4. En baslinje samt deltalogg för enbart tillåtna arbetsställefält. Separat publiceringsprocess för anonymiserade/aggregerade resultat, med kontroll av reklamspärrar.
+5. Förmåga att särskilja verklig avregistrering, bortfall från API:t och felaktig eller ofullständig snapshot.
+
+Fram till dess finns endast **aggregerad månadshistorik** offentligt.
