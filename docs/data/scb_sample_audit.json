@@ -1,0 +1,43 @@
+{
+  "source": "SCB, allmänna företagsregistret – egen bearbetning",
+  "municipality": "2580",
+  "fetched_at": "2026-10-14",
+  "sample_size": 100,
+  "method": "Första 100 posterna från API:et; inte ett slumpmässigt eller representativt urval.",
+  "fields_present_count": {
+    "cfarNr": 100,
+    "peOrgNr": 100,
+    "ben": 100,
+    "primarNaringsgren": 100,
+    "postAdress": 100,
+    "belagenhetsadress": 100,
+    "aeStat": 100,
+    "anstKl": 100,
+    "reklamSparrTyp": 100,
+    "telefonSparrTyp": 100,
+    "epostSparrTyp": 100
+  },
+  "nested_field_names": {
+    "primarNaringsgren": [
+      "andelProcent",
+      "avdelningsKod",
+      "naringsgren",
+      "rangordning"
+    ],
+    "postAdress": [
+      "coAdress",
+      "gatuAdress",
+      "postNr",
+      "postOrt"
+    ],
+    "belagenhetsadress": [
+      "bGatuAdress",
+      "bPostNr",
+      "bPostOrt",
+      "kommun",
+      "lan"
+    ]
+  },
+  "publication_note": "Ingen enskild post, namn, personnummer, CFAR-nummer, adress eller koordinat publiceras.",
+  "legal_form_verified": false
+}
