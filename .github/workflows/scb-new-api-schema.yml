@@ -1,0 +1,20 @@
+name: Kontrollera nya SCB API-specifikationen
+on:
+  push:
+    paths:
+      - 'discover_scb_openapi.py'
+      - '.github/workflows/scb-new-api-schema.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Kontrollera OpenAPI utan att läsa registerposter
+        run: python discover_scb_openapi.py
