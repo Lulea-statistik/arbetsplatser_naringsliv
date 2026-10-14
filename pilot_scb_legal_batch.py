@@ -6,6 +6,7 @@ import collections,json,os,time,urllib.parse,urllib.request,urllib.error
 BASE="https://apiafr.scb.se/v1"
 LIMIT=2000
 BUDGET=30
+MAX_EXTRA_LOOKUPS=12
 calls=0
 last=0.0
 
@@ -70,6 +71,19 @@ def main():
     links={org for org,_ in workplaces.values()}
     matched=links & units.keys()
     unmatched=links-units.keys()
+    # Small diagnostic sample only; no identifiers or individual values leave memory.
+    direct=collections.Counter()
+    for org in sorted(unmatched)[:MAX_EXTRA_LOOKUPS]:
+        try:
+            entity=request("/juridiskaenheter/"+urllib.parse.quote(org,safe=""),key)
+            if not isinstance(entity,dict):raise RuntimeError("Unexpected direct unit schema")
+            form=str(entity.get("jurform") or "")
+            group="fysisk_person" if form=="10" else "annan_juridisk_form" if form else "okand_form"
+            direct[group]+=1
+        except RuntimeError:
+            direct["misslyckat_uppslag"]+=1
+    print("Supplemental direct-lookups (non-representative):",dict(sorted(direct.items())),
+          "attempted",sum(direct.values()),"of",len(unmatched),flush=True)
     matched_workplaces=sum(org in units for org,_ in workplaces.values())
     categories=collections.Counter()
     missing_names=collections.Counter()
