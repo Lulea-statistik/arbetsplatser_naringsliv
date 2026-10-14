@@ -1,0 +1,21 @@
+name: SCB – Bootstrap (säker kontroll)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: scb-bootstrap-diagnostic
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Kontrollera fullständighet och fält utan att spara poster
+        env:
+          SCB_API_KEY: ${{ secrets.SCB_API_KEY }}
+        run: python bootstrap_scb_readiness.py
