@@ -5,7 +5,7 @@ A schema/coverage pilot only, NOT an approved individual publication pipeline.
 import collections,json,os,time,urllib.parse,urllib.request,urllib.error,datetime
 BASE="https://apiafr.scb.se/v1"
 LIMIT=2000
-BUDGET=30
+BUDGET=60
 MAX_EXTRA_LOOKUPS=0
 # Pilot additional legal entities headquartered in Norrbotten county (25).
 calls=0
