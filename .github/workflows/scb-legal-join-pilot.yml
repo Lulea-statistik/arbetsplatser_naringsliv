@@ -1,10 +1,10 @@
-name: SCB juridisk form – pilot med 15 arbetsställen
+name: SCB juridisk form – pilot för effektiv batchmatchning
 on:
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: scb-legal-join-pilot
+  group: scb-legal-batch-pilot
   cancel-in-progress: false
 jobs:
   pilot:
@@ -18,4 +18,4 @@ jobs:
       - name: Kontrollera koppling i minnet och skriv endast summeringar
         env:
           SCB_API_KEY: ${{ secrets.SCB_API_KEY }}
-        run: python pilot_scb_legal_join.py
+        run: python pilot_scb_legal_batch.py
