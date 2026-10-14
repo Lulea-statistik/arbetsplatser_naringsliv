@@ -1,0 +1,21 @@
+name: SCB juridisk form – pilot med 15 arbetsställen
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: scb-legal-join-pilot
+  cancel-in-progress: false
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Kontrollera koppling i minnet och skriv endast summeringar
+        env:
+          SCB_API_KEY: ${{ secrets.SCB_API_KEY }}
+        run: python pilot_scb_legal_join.py
