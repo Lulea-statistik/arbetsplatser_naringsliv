@@ -4,6 +4,7 @@ Never persist individual register records, names, addresses, identifiers, or raw
 SCB provides cursorId pagination and maximum 5000 items per request.
 """
 import collections
+from scb_monthly_history import update_history
 import datetime as dt
 import json
 import os
@@ -15,10 +16,23 @@ import urllib.request
 BASE="https://apiafr.scb.se/v1/arbetsstallen/kommun/2580"
 COUNT="https://apiafr.scb.se/v1/arbetsstallen/kommun/2580/count"
 LIMIT=2000
+MAX_REQUESTS_PER_RUN=20
+_request_count=0
+_last_request_at=0.0
 
 def query(url,key):
+    global _request_count, _last_request_at
+    # Local hard cap includes retries and count endpoint. Not a cross-workflow quota.
+    import time as _clock
     headers={"Accept":"application/json","X-API-Key":key,"User-Agent":"Lulea-statistik-public-aggregate/1.0"}
     for attempt in range(4):
+        if _request_count >= MAX_REQUESTS_PER_RUN:
+            raise RuntimeError("SCB run request budget exceeded (20 calls, including retries)")
+        delay = 0.5 - (_clock.monotonic() - _last_request_at)
+        if delay > 0:
+            _clock.sleep(delay)
+        _last_request_at = _clock.monotonic()
+        _request_count += 1
         try:
             with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=35) as response:
                 return json.load(response)
@@ -138,7 +152,8 @@ def aggregate():
     with open("docs/data/scb_lulea_aggregate.json","w",encoding="utf-8") as f:
         json.dump(summary,f,ensure_ascii=False,indent=2)
         f.write("\n")
-    print("SUCCESS: complete municipality extraction and privacy-safe aggregate written")
+    update_history(summary)
+    print(f"SUCCESS: complete municipality extraction, {_request_count} API requests, monthly aggregate history updated")
 
 if __name__=="__main__":
     aggregate()
