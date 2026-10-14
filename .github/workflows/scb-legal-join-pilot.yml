@@ -1,4 +1,4 @@
-name: SCB juridisk form – pilot för effektiv batchmatchning
+name: SCB juridisk form – fullständig Luleåmatchning
 on:
   workflow_dispatch:
 permissions:
@@ -9,13 +9,13 @@ concurrency:
 jobs:
   pilot:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Kontrollera koppling i minnet och skriv endast summeringar
+      - name: Kontrollera alla sidor och redovisa enbart sammanräknad täckning
         env:
           SCB_API_KEY: ${{ secrets.SCB_API_KEY }}
         run: python pilot_scb_legal_batch.py
