@@ -27,3 +27,7 @@ Starta **Actions → Hämta SCB arbetsställen Luleå → Run workflow**. Schema
 Publicera från `main` / `docs` under **Settings → Pages** om GitHub Pages inte redan är aktiverat.
 
 Ingen API-nyckel exponeras i Pages-sidan. Efter genomförd och godkänd hämtning läses `docs/data/arbetsstallen_lulea.json` som sökbar lista.
+
+## SCB:s API-användarvillkor
+
+Användarvillkoren som projektägaren tillhandahållit finns sparade i [docs/SCB-API-ANVANDARVILLKOR.md](docs/SCB-API-ANVANDARVILLKOR.md). De anger bland annat **högst 5 API-anrop per sekund och nyckel**, att API-nyckeln är personlig och inte får delas, samt att registeruppgifterna får spridas med **SCB som källa** (och upplysning om egen bearbetning när sådan gjorts). GDPR-ansvar och krav på information om **reklamspärr** gäller fortfarande. Dokumentation av villkoren innebär inte att de har signerats eller att nyckel finns.
