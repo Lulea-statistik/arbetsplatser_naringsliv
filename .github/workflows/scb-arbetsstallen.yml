@@ -23,6 +23,7 @@ jobs:
           SCB_API_QUERY_JSON: ${{ secrets.SCB_API_QUERY_JSON }}
           SCB_API_METHOD: ${{ vars.SCB_API_METHOD || 'POST' }}
           SCB_API_KEY_HEADER: ${{ vars.SCB_API_KEY_HEADER || 'x-api-key' }}
+          SCB_PUBLICATION_APPROVED: ${{ vars.SCB_PUBLICATION_APPROVED || 'false' }}
         run: python fetch_scb_workplaces.py
       - name: Publicera validerade uppgifter
         run: |
