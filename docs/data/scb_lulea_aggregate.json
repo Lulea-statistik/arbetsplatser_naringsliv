@@ -1,0 +1,23 @@
+{
+  "municipality": "2580",
+  "source": "SCB, allmänna företagsregistret – egen bearbetning",
+  "fetched_at": "2026-10-14",
+  "workplace_count": 13965,
+  "pages": 7,
+  "records_with_location_address": 13965,
+  "records_with_reklam_telefon_epost_spärrfält": 13965,
+  "employment_size_class_distribution": {
+    "1": 10696,
+    "10": 2,
+    "11": 1,
+    "12": 1,
+    "2": 1838,
+    "3": 506,
+    "4": 424,
+    "5": 315,
+    "6": 117,
+    "7": 40,
+    "8": 21,
+    "9": 4
+  }
+}
