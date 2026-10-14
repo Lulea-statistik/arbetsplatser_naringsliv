@@ -1,0 +1,15 @@
+{
+  "municipality": "2580",
+  "fetched_at": "2026-10-14",
+  "source": "SCB, allmänna företagsregistret – egen bearbetning",
+  "workplace_count": 13965,
+  "scope": "Juridiska enheter med säte i Luleå; omatchade inkluderar andra säteskommuner",
+  "juridisk_form_groups": {
+    "annan_juridisk_form": 7163,
+    "ej_matchad": 1740,
+    "fysisk_person": 5062
+  },
+  "match_rate_workplaces": 0.875403,
+  "matched_workplaces_without_name_with_legal_unit_name": 6478,
+  "personal_data": "No company identifiers, names or addresses in this file"
+}
