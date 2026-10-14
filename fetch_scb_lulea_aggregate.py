@@ -63,17 +63,29 @@ def aggregate():
             raise RuntimeError("Empty or oversized SCB page")
         for record in records:
             if not isinstance(record,dict):raise RuntimeError("Unexpected workplace record type")
-            cfar=record.get("cfarNr")
+            # Explicit data minimization: copy only approved fields for aggregate calculations.
+            # peOrgNr, names, exact address details and contact data are never
+            # transferred into the analysis projection or output.
+            selected = {field: record.get(field) for field in
+                        ("cfarNr", "anstKl", "belagenhetsadress",
+                         "reklamSparrTyp", "telefonSparrTyp", "epostSparrTyp")}
+            # Keep only a boolean indicating address availability, never an address.
+            has_location = isinstance(selected["belagenhetsadress"], dict) and bool(selected["belagenhetsadress"])
+            selected.pop("belagenhetsadress")
+            cfar=selected["cfarNr"]
             if not isinstance(cfar,int):raise RuntimeError("Missing CFAR")
             if cfar in seen_cfar:raise RuntimeError("Duplicate CFAR across pages")
             seen_cfar.add(cfar)
-            klass=record.get("anstKl")
+            klass=selected["anstKl"]
             by_size[str(klass) if klass is not None else "saknas"]+=1
-            if isinstance(record.get("belagenhetsadress"),dict) and record["belagenhetsadress"]:
+            if has_location:
                 valid_address+=1
-            if record.get("reklamSparrTyp") is not None and record.get("telefonSparrTyp") is not None and record.get("epostSparrTyp") is not None:
+            if all(selected[field] is not None for field in
+                   ("reklamSparrTyp", "telefonSparrTyp", "epostSparrTyp")):
                 with_restriction+=1
         n+=len(records)
+        # Release raw SCB response before requesting the next page.
+        del record, selected, records, data
         pages+=1
         print(f"Page {pages}: {len(records)} records, cumulative {n}/{expected}",flush=True)
         if n>expected+LIMIT:raise RuntimeError("Received more rows than expected")
