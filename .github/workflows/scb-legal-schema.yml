@@ -1,0 +1,16 @@
+name: Kartlägg SCB juridisk form och namnfält
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Granska endast publika API-scheman och kodtabellernas struktur
+        run: python inspect_scb_legal_schema.py
