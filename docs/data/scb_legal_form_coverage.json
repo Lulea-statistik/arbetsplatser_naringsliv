@@ -3,13 +3,14 @@
   "fetched_at": "2026-10-14",
   "source": "SCB, allmänna företagsregistret – egen bearbetning",
   "workplace_count": 13965,
-  "scope": "Juridiska enheter med säte i Norrbottens län; omatchade kan ha säte utanför länet",
+  "scope": "Endast arbetsställen i Luleå kommun (2580), oavsett juridiska enhetens säte. Enheter utanför Luleå används enbart som uppslagskälla.",
   "juridisk_form_groups": {
-    "annan_juridisk_form": 7795,
-    "ej_matchad": 1087,
+    "annan_juridisk_form": 7816,
+    "ej_matchad": 1066,
     "fysisk_person": 5083
   },
-  "match_rate_workplaces": 0.922163,
-  "matched_workplaces_without_name_with_legal_unit_name": 6876,
+  "match_rate_workplaces": 0.923666,
+  "supplementary_unit_lookups": 15,
+  "matched_workplaces_without_name_with_legal_unit_name": 6879,
   "personal_data": "No company identifiers, names or addresses in this file"
 }
