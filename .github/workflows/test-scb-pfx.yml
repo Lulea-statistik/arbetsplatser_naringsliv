@@ -1,0 +1,31 @@
+name: Testa SCB certifikat och API
+on:
+  push:
+    paths:
+      - 'test_scb_certificate.py'
+      - '.github/workflows/test-scb-pfx.yml'
+  workflow_dispatch:
+    inputs:
+      antal_anrop:
+        description: 'Antal autentiserade diagnostiska anrop (1-1000). Använd 1 tills första test lyckats.'
+        required: true
+        default: '1'
+permissions:
+  contents: read
+jobs:
+  test-scb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Installera PKCS12-stöd
+        run: pip install 'requests-pkcs12>=1.24,<2'
+      - name: Testa SCB med klientcertifikat (utan att spara registerdata)
+        env:
+          SCB_PFX_BASE64: ${{ secrets.SCB_PFX_BASE64 }}
+          SCB_PFX_PASSWORD: ${{ secrets.SCB_PFX_PASSWORD }}
+          SCB_TEST_CALLS: ${{ github.event.inputs.antal_anrop || '1' }}
+        run: python test_scb_certificate.py
