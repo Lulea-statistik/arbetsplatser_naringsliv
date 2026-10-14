@@ -1,0 +1,51 @@
+{
+  "categorical_distributions": {
+    "aeStat": {
+      "0": 2214,
+      "1": 10888,
+      "9": 863
+    },
+    "anstKl": {
+      "1": 10696,
+      "2": 1838,
+      "3": 506,
+      "4": 424,
+      "5": 315,
+      "6": 117,
+      "7": 40,
+      "8": 21,
+      "Övriga kategorier (sammanslagna)": 8
+    },
+    "reklamSparrTyp": {
+      "1": 13903,
+      "2": 62
+    },
+    "sniAvdelning": {
+      " ": 1063,
+      "A": 2678,
+      "B": 14,
+      "C": 449,
+      "D": 17,
+      "E": 42,
+      "F": 906,
+      "G": 866,
+      "H": 272,
+      "I": 302,
+      "J": 161,
+      "K": 393,
+      "L": 331,
+      "M": 1169,
+      "N": 1747,
+      "O": 450,
+      "P": 54,
+      "Q": 356,
+      "R": 434,
+      "S": 868,
+      "T": 1393
+    }
+  },
+  "month": "2026-10",
+  "municipality": "2580",
+  "source": "SCB, allmänna företagsregistret – egen bearbetning",
+  "workplace_count": 13965
+}

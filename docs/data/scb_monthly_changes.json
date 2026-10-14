@@ -1,0 +1,16 @@
+{
+  "events": [
+    {
+      "kind": "baseline",
+      "month": "2026-10",
+      "note": "Första observerade månaden; inga tidigare förändringar kan härledas."
+    }
+  ],
+  "grain": "monthly_aggregate",
+  "months_observed": [
+    "2026-10"
+  ],
+  "municipality": "2580",
+  "privacy": "Ingen individhistorik eller identifierande poster lagras.",
+  "semantics": "Inga förändringshändelser betyder oförändrat aggregerat värde jämfört med föregående observerade månad. Mellan saknade månader går det inte att dra slutsatser."
+}
