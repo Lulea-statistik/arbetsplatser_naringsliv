@@ -8,9 +8,6 @@
   "records_with_reklam_telefon_epost_spärrfält": 13965,
   "employment_size_class_distribution": {
     "1": 10696,
-    "10": 2,
-    "11": 1,
-    "12": 1,
     "2": 1838,
     "3": 506,
     "4": 424,
@@ -18,6 +15,52 @@
     "6": 117,
     "7": 40,
     "8": 21,
-    "9": 4
-  }
+    "Övriga kategorier (sammanslagna)": 8
+  },
+  "categorical_distributions": {
+    "anstKl": {
+      "1": 10696,
+      "2": 1838,
+      "3": 506,
+      "4": 424,
+      "5": 315,
+      "6": 117,
+      "7": 40,
+      "8": 21,
+      "Övriga kategorier (sammanslagna)": 8
+    },
+    "aeStat": {
+      "0": 2214,
+      "1": 10888,
+      "9": 863
+    },
+    "sniAvdelning": {
+      " ": 1063,
+      "A": 2678,
+      "B": 14,
+      "C": 449,
+      "D": 17,
+      "E": 42,
+      "F": 906,
+      "G": 866,
+      "H": 272,
+      "I": 302,
+      "J": 161,
+      "K": 393,
+      "L": 331,
+      "M": 1169,
+      "N": 1747,
+      "O": 450,
+      "P": 54,
+      "Q": 356,
+      "R": 434,
+      "S": 868,
+      "T": 1393
+    },
+    "reklamSparrTyp": {
+      "1": 13903,
+      "2": 62
+    }
+  },
+  "distribution_note": "Sällsynta kategorier (färre än fem poster) har slagits samman för offentlig presentation."
 }
