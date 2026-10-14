@@ -33,7 +33,7 @@ def main():
     if None in ids:raise RuntimeError("Missing unit reference")
     # Compare a single page from the municipality-filtered unit endpoint.
     units=request("/juridiskaenheter/kommun/2580?limit=2000",key)
-    unit_rows=units.get("juridiskaEnheter")
+    unit_rows=units.get("juridiskaEnheter",units.get("juridiskaenheter"))
     if not isinstance(unit_rows,list):
         # Only schema keys, no business values.
         print("Unit response top-level keys:",",".join(sorted(units.keys())),flush=True)
