@@ -73,6 +73,8 @@ def main():
             "size_class":pick(row,"Storleksklass","AntalAnstalldaKlass","StorleksklassAnstallda","sizeClass")})
     if not output:
         raise SystemExit("No workplaces returned for Luleå; preserving previous published data")
+    if os.environ.get("SCB_PUBLICATION_APPROVED", "").lower() != "true":
+        raise SystemExit("Publication blocked pending review of SCB terms and personal-data risks. Set SCB_PUBLICATION_APPROVED=true after approval.")
     path=pathlib.Path("docs/data/arbetsstallen_lulea.json")
     path.parent.mkdir(parents=True,exist_ok=True)
     path.write_text(json.dumps({"municipality":"2580","source":"SCB företagsregister",
