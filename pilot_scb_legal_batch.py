@@ -6,7 +6,7 @@ import collections,json,os,time,urllib.parse,urllib.request,urllib.error,datetim
 BASE="https://apiafr.scb.se/v1"
 LIMIT=2000
 BUDGET=60
-MAX_EXTRA_LOOKUPS=0
+MAX_EXTRA_LOOKUPS=15
 # Pilot additional legal entities headquartered in Norrbotten county (25).
 calls=0
 last=0.0
@@ -95,10 +95,14 @@ def main():
             form=str(entity.get("jurform") or "")
             group="fysisk_person" if form=="10" else "annan_juridisk_form" if form else "okand_form"
             direct[group]+=1
+            if form:
+                units[org]=(form,bool(entity.get("namn")))
         except RuntimeError:
             direct["misslyckat_uppslag"]+=1
     print("Supplemental direct-lookups (non-representative):",dict(sorted(direct.items())),
           "attempted",sum(direct.values()),"of",len(unmatched),flush=True)
+    matched=links & units.keys()
+    unmatched=links-units.keys()
     matched_workplaces=sum(org in units for org,_ in workplaces.values())
     categories=collections.Counter()
     missing_names=collections.Counter()
@@ -118,16 +122,17 @@ def main():
     print("Matched workplace rows:",matched_workplaces,"unmatched rows:",total-matched_workplaces)
     print("Workplace classification counts:",dict(sorted(categories.items())))
     print("Missing-name diagnostics:",dict(sorted(missing_names.items())))
-    # Publish only municipality-wide aggregate classification from the paginated join.
-    # Do not mix the tiny supplemental direct-lookup sample into these totals.
+    # Publish only classification of workplace rows located in Lulea.
+    # Direct lookups are included only when legal form is explicitly verified.
     if sum(categories.values())!=total:raise RuntimeError("Classification totals mismatch")
     report={"municipality":"2580",
             "fetched_at":datetime.datetime.now(datetime.timezone.utc).date().isoformat(),
             "source":"SCB, allmänna företagsregistret – egen bearbetning",
             "workplace_count":total,
-            "scope":"Juridiska enheter med säte i Norrbottens län; omatchade kan ha säte utanför länet",
+            "scope":"Endast arbetsställen i Luleå kommun (2580), oavsett juridiska enhetens säte. Enheter utanför Luleå används enbart som uppslagskälla.",
             "juridisk_form_groups":dict(sorted(categories.items())),
             "match_rate_workplaces":round(matched_workplaces/total,6),
+            "supplementary_unit_lookups":sum(direct.values()),
             "matched_workplaces_without_name_with_legal_unit_name":missing_names["enhetsnamn_finns"],
             "personal_data":"No company identifiers, names or addresses in this file"}
     os.makedirs("docs/data",exist_ok=True)
