@@ -1,16 +1,40 @@
 <!doctype html>
 <html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Arbetsställen i Luleå kommun – SCB</title>
-<style>body{font:16px system-ui,Arial,sans-serif;margin:0;background:#f5f6f8;color:#1e293b}header{background:#9e1b32;color:white;padding:24px max(24px,calc((100vw - 1100px)/2))}main{max-width:1100px;margin:24px auto;padding:0 18px}.panel{background:white;border:1px solid #dce1e7;border-radius:12px;padding:20px;margin-bottom:16px}.stats{display:flex;flex-wrap:wrap;gap:15px}.stats>div{background:#f1f5f9;padding:14px;border-radius:8px;flex:1;min-width:160px}strong{display:block;font-size:28px}input{padding:10px;border:1px solid #94a3b8;border-radius:7px;width:min(400px,90%)}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#f8fafc}.muted{color:#475569}.scroll{overflow:auto}a{color:#164c82}#state{border-left:4px solid #b45309;padding:12px;background:#fffbeb}</style></head>
+<style>body{font:16px system-ui,Arial,sans-serif;margin:0;background:#f5f6f8;color:#1e293b}header{background:#9e1b32;color:white;padding:24px max(24px,calc((100vw - 1100px)/2))}main{max-width:1100px;margin:24px auto;padding:0 18px}.panel{background:white;border:1px solid #dce1e7;border-radius:12px;padding:20px;margin-bottom:16px}.stats{display:flex;flex-wrap:wrap;gap:15px}.stats>div{background:#f1f5f9;padding:14px;border-radius:8px;flex:1;min-width:160px}strong{display:block;font-size:28px}input{padding:10px;border:1px solid #94a3b8;border-radius:7px;width:min(400px,90%)}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#f8fafc}.muted{color:#475569}.scroll{overflow:auto}a{color:#164c82}#state{border-left:4px solid #b45309;padding:12px;background:#fffbeb}.bars{display:grid;gap:9px}.barrow{display:grid;grid-template-columns:minmax(100px,170px) 1fr 65px;align-items:center;gap:12px}.bartrack{height:20px;border-radius:5px;background:#edf2f7;overflow:hidden}.barfill{height:100%;background:#9e1b32}.small{font-size:14px}.metadata{display:flex;gap:14px;flex-wrap:wrap}.metadata>div{padding:12px;background:#f1f5f9;border-radius:8px;min-width:180px}#state{white-space:normal}@media(max-width:500px){.barrow{grid-template-columns:50px 1fr 60px}}</style></head>
 <body><header><h1>Arbetsställen i Luleå kommun</h1><p>SCB:s allmänna företagsregister – kommun 2580</p></header><main>
 <section class="panel"><h2>Datastatus</h2><div id="state" role="status">Kontrollerar om en publicerad datafil finns …</div><p class="muted">Data hämtas i GitHub Actions för att API-nyckeln inte ska exponeras i webbläsaren. Enskilda arbetsställen publiceras först efter kontroll av SCB:s villkor.</p></section>
 <section class="panel stats"><div>Arbetsställen<strong id="count">–</strong></div><div>Kommun<strong>Luleå (2580)</strong></div><div>Senaste hämtning<strong id="date">–</strong></div></section>
-<section class="panel"><h2>Sök arbetsställen</h2><label for="q">Namn, adress eller SNI</label><p><input id="q" type="search" placeholder="Sök bland hämtade arbetsställen..." disabled></p><div class="scroll"><table><thead><tr><th>Arbetsställe</th><th>Adress</th><th>SNI</th><th>Storleksklass</th><th>Reklamspärr</th></tr></thead><tbody id="results"><tr><td colspan="5">Inga publicerade arbetsställen ännu.</td></tr></tbody></table></div></section>
+<section class="panel" id="aggregate-panel"><h2>Testhämtning – fördelning efter anställdklass</h2><p class="muted">Fördelningen bygger på verkliga arbetsställeposter från SCB. Klasserna redovisas tills vidare som SCB:s klasskoder; deras exakta intervall behöver stämmas av mot kodtabellen.</p><div id="size-bars" class="bars" role="img" aria-label="Antal arbetsställen efter anställdklass">Laddar diagram …</div><p class="small muted">Källa: SCB, allmänna företagsregistret, egen bearbetning. Summorna visar arbetsställen, inte personer.</p></section><section class="panel"><h2>Kontroll av hämtningen</h2><div class="metadata"><div>API-sidor: <b id="pages">–</b></div><div>Poster med adressfält: <b id="address-count">–</b></div><div>Poster med spärrfält: <b id="restriction-count">–</b></div></div><p><a href="./data/scb_lulea_aggregate.json" target="_blank" rel="noopener">Öppna exakt JSON-underlag</a> · <a href="https://github.com/Lulea-statistik/arbetsplatser_naringsliv/blob/main/docs/data/scb_lulea_aggregate.json">Visa filen på GitHub</a></p></section><section class="panel"><h2>Sök arbetsställen</h2><p class="muted">Individuella arbetsställen visas inte i testversionen. Publiceringen kräver granskning av personuppgifter, adresser och SCB:s villkor.</p><label for="q">Namn, adress eller SNI</label><p><input id="q" type="search" placeholder="Sök bland hämtade arbetsställen..." disabled></p><div class="scroll"><table><thead><tr><th>Arbetsställe</th><th>Adress</th><th>SNI</th><th>Storleksklass</th><th>Reklamspärr</th></tr></thead><tbody id="results"><tr><td colspan="5">Inga publicerade arbetsställen ännu.</td></tr></tbody></table></div></section>
 <section class="panel"><h2>Metod och begränsningar</h2><p>SCB:s företagsregister innehåller företag och deras arbetsställen. Ett arbetsställe är en verksamhetsplats och ska inte förväxlas med ett företag eller ett exakt antal anställda. Här används Luleå kommunkod <b>2580</b>. Koordinater och karta tillkommer först när korrekta adresspunkter är verifierade.</p><p><b>Vidareanvändning:</b> Respektera reklamspärrar för post, e-post och telefon. Uppgifterna är inte en kontaktlista för marknadsföring. Publicering av personuppgifter förutsätter separat GDPR-bedömning. API-nyckeln lagras inte på webbplatsen.</p><p>Källa: Statistiska centralbyrån (SCB), allmänna företagsregistret. <b>Egen bearbetning:</b> urval och presentation för Luleå kommun. <a href="https://www.scb.se/vara-tjanster/bestall-data-och-statistik/foretagsregistret/avgiftsfria-uppgifter-i-foretagsregistret/">SCB:s företagsregister</a>. <a href="https://github.com/Lulea-statistik/arbetsplatser_naringsliv/blob/main/docs/SCB-API-ANVANDARVILLKOR.md">Användarvillkor</a>.</p></section>
 </main><script>
-const $=id=>document.getElementById(id);let records=[];
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function render(){let q=$('q').value.toLocaleLowerCase('sv');let found=records.filter(r=>[r.name,r.address,r.sni,r.size_class].some(x=>String(x||'').toLocaleLowerCase('sv').includes(q)));$('results').innerHTML=found.length?found.slice(0,300).map(r=>'<tr><td>'+esc(r.name)+'</td><td>'+esc(r.address)+'</td><td>'+esc(r.sni)+'</td><td>'+esc(r.size_class)+'</td><td>'+esc(r.marketing_restriction)+'</td></tr>').join(''):'<tr><td colspan="4">Inga träffar.</td></tr>';}
-$('q').addEventListener('input',render);
-fetch('./data/arbetsstallen_lulea.json',{cache:'no-store'}).then(async r=>{if(!r.ok)throw Error('Ingen publicerad SCB-data ännu');return r.json()}).then(d=>{records=Array.isArray(d.records)?d.records:[];$('state').textContent='SCB-data inläst. Uppgifterna avser det senaste godkända uttaget.';$('count').textContent=records.length.toLocaleString('sv-SE');$('date').textContent=d.fetched_at||'Okänd';$('q').disabled=false;render()}).catch(e=>{$('state').textContent='SCB-anslutningen är förberedd men inga arbetsställeuppgifter har hämtats: '+e.message});
+const $=id=>document.getElementById(id);
+const n=v=>Number(v||0).toLocaleString('sv-SE');
+fetch('./data/scb_lulea_aggregate.json',{cache:'no-store'}).then(async r=>{
+  if(!r.ok)throw Error('Statistikfilen kunde inte läsas (HTTP '+r.status+')');
+  return r.json();
+}).then(d=>{
+  if(d.municipality!=='2580'||!Number.isSafeInteger(d.workplace_count)||d.workplace_count<0)throw Error('Statistikfilen har oväntat format');
+  $('state').textContent='Verifierad testhämtning från SCB. Endast aggregerad statistik visas; inga registerposter eller personuppgifter publiceras.';
+  $('count').textContent=n(d.workplace_count);
+  $('date').textContent=d.fetched_at||'Okänd';
+  $('pages').textContent=n(d.pages);
+  $('address-count').textContent=n(d.records_with_location_address);
+  $('restriction-count').textContent=n(d['records_with_reklam_telefon_epost_spärrfält']);
+  const groups=Object.entries(d.employment_size_class_distribution||{}).map(([key,value])=>[key,Number(value)]).sort((a,b)=>Number(a[0])-Number(b[0]));
+  if(groups.reduce((sum,item)=>sum+item[1],0)!==d.workplace_count)throw Error('Fördelningen stämmer inte med totalsumman');
+  const max=Math.max(1,...groups.map(x=>x[1]));
+  const container=$('size-bars');container.replaceChildren();
+  for(const [key,value] of groups){
+    const row=document.createElement('div');row.className='barrow';
+    const label=document.createElement('span');label.textContent='Klass '+key;
+    const track=document.createElement('div');track.className='bartrack';
+    const fill=document.createElement('div');fill.className='barfill';fill.style.width=(100*value/max)+'%';track.append(fill);
+    const count=document.createElement('span');count.textContent=n(value);
+    row.append(label,track,count);container.append(row);
+  }
+}).catch(e=>{
+ $('state').textContent='Kunde inte visa SCB-testdata: '+e.message;
+ $('size-bars').textContent='Ingen verifierad diagramdata kan visas.';
+});
 </script></body></html>
