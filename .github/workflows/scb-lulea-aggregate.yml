@@ -30,5 +30,17 @@ jobs:
           git add docs/data/scb_lulea_aggregate.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "Update anonymized SCB Lulea workplace aggregates"
-          git pull --rebase origin main
-          git push
+          # Network/DNS glitches can occur after successful SCB extraction.
+          # Retry only the GitHub publication step, not the API download.
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              echo "Aggregate SCB data successfully pushed on attempt $attempt"
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            if [ "$attempt" -eq 5 ]; then
+              echo "GitHub publication failed after 5 attempts" >&2
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
