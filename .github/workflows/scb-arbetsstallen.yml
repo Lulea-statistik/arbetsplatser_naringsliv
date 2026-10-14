@@ -1,8 +1,6 @@
 name: Hämta SCB arbetsställen Luleå
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '20 6 * * 1'
 permissions:
   contents: write
 concurrency:
