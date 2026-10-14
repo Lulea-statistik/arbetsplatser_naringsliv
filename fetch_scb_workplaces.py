@@ -68,7 +68,7 @@ def main():
         addr=pick(row,"Besoksadress","Besöksadress","Gatuadress","ArbetsstalleAdress","ArbetsställeAdress","address")
         if not name and not addr:
             raise SystemExit("Cannot map names or addresses from SCB response")
-        output.append({"name":name,"address":addr,
+        # Marketing restrictions must accompany any redistributed records.\n        # Fail closed until the actual SCB API layout has been mapped and checked.\n        advertising=pick(row,"Reklamsparr","Reklamspärr","ReklamSparr","marketingRestriction")\n        if not advertising:\n            raise SystemExit("Advertising restriction field unavailable; check SCB layout before publishing")\n        output.append({"name":name,"address":addr,"marketing_restriction":advertising,
             "sni":pick(row,"SniKod","SNI","SNI2007","SNI2025","sni"),
             "size_class":pick(row,"Storleksklass","AntalAnstalldaKlass","StorleksklassAnstallda","sizeClass")})
     if not output:
@@ -78,7 +78,7 @@ def main():
     path=pathlib.Path("docs/data/arbetsstallen_lulea.json")
     path.parent.mkdir(parents=True,exist_ok=True)
     path.write_text(json.dumps({"municipality":"2580","source":"SCB företagsregister",
-        "fetched_at":dt.datetime.now(dt.timezone.utc).date().isoformat(),
+        "fetched_at":dt.datetime.now(dt.timezone.utc).date().isoformat(),\n        "processing_note":"Källa: SCB, allmänna företagsregistret. Egen bearbetning och filtrering för Luleå kommun.",\n        "marketing_notice":"Respektera reklamspärrar. Uppgifter får inte användas för otillåten direktmarknadsföring.",
         "records":output},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print("Luleå workplaces validated:",len(output))
 if __name__=="__main__":
