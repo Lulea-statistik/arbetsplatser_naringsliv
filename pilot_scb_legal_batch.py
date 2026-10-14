@@ -2,7 +2,7 @@
 
 A schema/coverage pilot only, NOT an approved individual publication pipeline.
 """
-import collections,json,os,time,urllib.parse,urllib.request,urllib.error
+import collections,json,os,time,urllib.parse,urllib.request,urllib.error,datetime
 BASE="https://apiafr.scb.se/v1"
 LIMIT=2000
 BUDGET=30
@@ -103,6 +103,21 @@ def main():
     print("Matched workplace rows:",matched_workplaces,"unmatched rows:",total-matched_workplaces)
     print("Workplace classification counts:",dict(sorted(categories.items())))
     print("Missing-name diagnostics:",dict(sorted(missing_names.items())))
+    # Publish only municipality-wide aggregate classification from the paginated join.
+    # Do not mix the tiny supplemental direct-lookup sample into these totals.
+    if sum(categories.values())!=total:raise RuntimeError("Classification totals mismatch")
+    report={"municipality":"2580",
+            "fetched_at":datetime.datetime.now(datetime.timezone.utc).date().isoformat(),
+            "source":"SCB, allmänna företagsregistret – egen bearbetning",
+            "workplace_count":total,
+            "scope":"Juridiska enheter med säte i Luleå; omatchade inkluderar andra säteskommuner",
+            "juridisk_form_groups":dict(sorted(categories.items())),
+            "match_rate_workplaces":round(matched_workplaces/total,6),
+            "matched_workplaces_without_name_with_legal_unit_name":missing_names["enhetsnamn_finns"],
+            "personal_data":"No company identifiers, names or addresses in this file"}
+    os.makedirs("docs/data",exist_ok=True)
+    with open("docs/data/scb_legal_form_coverage.json","w",encoding="utf-8") as fh:
+        json.dump(report,fh,ensure_ascii=False,indent=2);fh.write("\n")
     print("Requests used:",calls,"/",BUDGET)
     print("No identifiers or individual register values saved")
 if __name__=="__main__":main()
