@@ -49,6 +49,9 @@ def aggregate():
     n=0
     pages=0
     by_size=collections.Counter()
+    by_industry=collections.Counter()
+    by_status=collections.Counter()
+    by_marketing=collections.Counter()
     valid_address=0
     with_restriction=0
     while True:
@@ -67,7 +70,7 @@ def aggregate():
             # peOrgNr, names, exact address details and contact data are never
             # transferred into the analysis projection or output.
             selected = {field: record.get(field) for field in
-                        ("cfarNr", "anstKl", "belagenhetsadress",
+                        ("cfarNr", "anstKl", "aeStat", "primarNaringsgren", "belagenhetsadress",
                          "reklamSparrTyp", "telefonSparrTyp", "epostSparrTyp")}
             # Keep only a boolean indicating address availability, never an address.
             has_location = isinstance(selected["belagenhetsadress"], dict) and bool(selected["belagenhetsadress"])
@@ -78,16 +81,22 @@ def aggregate():
             seen_cfar.add(cfar)
             klass=selected["anstKl"]
             by_size[str(klass) if klass is not None else "saknas"]+=1
+            industry=selected["primarNaringsgren"]
+            industry_code=industry.get("avdelningsKod") if isinstance(industry,dict) else None
+            by_industry[str(industry_code) if industry_code else "saknas"]+=1
+            by_status[str(selected["aeStat"]) if selected["aeStat"] is not None else "saknas"]+=1
+            by_marketing[str(selected["reklamSparrTyp"]) if selected["reklamSparrTyp"] is not None else "saknas"]+=1
             if has_location:
                 valid_address+=1
             if all(selected[field] is not None for field in
                    ("reklamSparrTyp", "telefonSparrTyp", "epostSparrTyp")):
                 with_restriction+=1
-        n+=len(records)
+        page_count=len(records)
+        n+=page_count
         # Release raw SCB response before requesting the next page.
         del record, selected, records, data
         pages+=1
-        print(f"Page {pages}: {len(records)} records, cumulative {n}/{expected}",flush=True)
+        print(f"Page {pages}: {page_count} records, cumulative {n}/{expected}",flush=True)
         if n>expected+LIMIT:raise RuntimeError("Received more rows than expected")
         if pagination.get("hasMore") is not True:
             break
@@ -100,10 +109,30 @@ def aggregate():
         time.sleep(0.8)
     if n!=expected:
         raise RuntimeError(f"Total mismatch: collected {n}; SCB reports {expected}. Do not publish")
+    # For newly published breakdowns, protect rare groups by combining cells <5.
+    def safe_distribution(counter):
+        result={}
+        small=0
+        for label,count in counter.items():
+            if count<5: small+=count
+            else: result[label]=count
+        if small:
+            # If the combined remainder is also small, combine with largest group.
+            if small<5 and result:
+                biggest=max(result,key=result.get)
+                result[biggest+" (inkl. färre än 5 i andra kategorier)"]=result.pop(biggest)+small
+            else: result["Övriga kategorier (sammanslagna)"]=small
+        return dict(sorted(result.items()))
     summary={"municipality":"2580","source":"SCB, allmänna företagsregistret – egen bearbetning","fetched_at":dt.datetime.now(dt.timezone.utc).date().isoformat(),
              "workplace_count":n,"pages":pages,"records_with_location_address":valid_address,
              "records_with_reklam_telefon_epost_spärrfält":with_restriction,
-             "employment_size_class_distribution":dict(sorted(by_size.items()))}
+             "employment_size_class_distribution":safe_distribution(by_size),
+             "categorical_distributions":{
+               "anstKl":safe_distribution(by_size),
+               "aeStat":safe_distribution(by_status),
+               "sniAvdelning":safe_distribution(by_industry),
+               "reklamSparrTyp":safe_distribution(by_marketing)},
+             "distribution_note":"Sällsynta kategorier (färre än fem poster) har slagits samman för offentlig presentation."}
     # Aggregate data only; no addresses, company names or unique business IDs.
     os.makedirs("docs/data",exist_ok=True)
     with open("docs/data/scb_lulea_aggregate.json","w",encoding="utf-8") as f:
