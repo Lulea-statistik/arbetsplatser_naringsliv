@@ -4,11 +4,193 @@
       "kind": "baseline",
       "month": "2026-10",
       "note": "Första observerade månaden; inga tidigare förändringar kan härledas."
+    },
+    {
+      "current": 14007,
+      "month": "2026-11",
+      "previous": 13965,
+      "variable": "workplace_count"
+    },
+    {
+      "category": "1",
+      "current": 10739,
+      "month": "2026-11",
+      "previous": 10696,
+      "variable": "anstKl"
+    },
+    {
+      "category": "2",
+      "current": 1848,
+      "month": "2026-11",
+      "previous": 1838,
+      "variable": "anstKl"
+    },
+    {
+      "category": "3",
+      "current": 500,
+      "month": "2026-11",
+      "previous": 506,
+      "variable": "anstKl"
+    },
+    {
+      "category": "4",
+      "current": 419,
+      "month": "2026-11",
+      "previous": 424,
+      "variable": "anstKl"
+    },
+    {
+      "category": "5",
+      "current": 316,
+      "month": "2026-11",
+      "previous": 315,
+      "variable": "anstKl"
+    },
+    {
+      "category": "6",
+      "current": 115,
+      "month": "2026-11",
+      "previous": 117,
+      "variable": "anstKl"
+    },
+    {
+      "category": "8",
+      "current": 22,
+      "month": "2026-11",
+      "previous": 21,
+      "variable": "anstKl"
+    },
+    {
+      "category": "0",
+      "current": 2221,
+      "month": "2026-11",
+      "previous": 2214,
+      "variable": "aeStat"
+    },
+    {
+      "category": "1",
+      "current": 10900,
+      "month": "2026-11",
+      "previous": 10888,
+      "variable": "aeStat"
+    },
+    {
+      "category": "9",
+      "current": 886,
+      "month": "2026-11",
+      "previous": 863,
+      "variable": "aeStat"
+    },
+    {
+      "category": " ",
+      "current": 1088,
+      "month": "2026-11",
+      "previous": 1063,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "A",
+      "current": 2683,
+      "month": "2026-11",
+      "previous": 2678,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "B",
+      "current": 13,
+      "month": "2026-11",
+      "previous": 14,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "C",
+      "current": 454,
+      "month": "2026-11",
+      "previous": 449,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "F",
+      "current": 905,
+      "month": "2026-11",
+      "previous": 906,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "I",
+      "current": 304,
+      "month": "2026-11",
+      "previous": 302,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "K",
+      "current": 391,
+      "month": "2026-11",
+      "previous": 393,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "L",
+      "current": 330,
+      "month": "2026-11",
+      "previous": 331,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "M",
+      "current": 1168,
+      "month": "2026-11",
+      "previous": 1169,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "N",
+      "current": 1748,
+      "month": "2026-11",
+      "previous": 1747,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "O",
+      "current": 454,
+      "month": "2026-11",
+      "previous": 450,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "Q",
+      "current": 360,
+      "month": "2026-11",
+      "previous": 356,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "R",
+      "current": 433,
+      "month": "2026-11",
+      "previous": 434,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "T",
+      "current": 1396,
+      "month": "2026-11",
+      "previous": 1393,
+      "variable": "sniAvdelning"
+    },
+    {
+      "category": "1",
+      "current": 13945,
+      "month": "2026-11",
+      "previous": 13903,
+      "variable": "reklamSparrTyp"
     }
   ],
   "grain": "monthly_aggregate",
   "months_observed": [
-    "2026-10"
+    "2026-10",
+    "2026-11"
   ],
   "municipality": "2580",
   "privacy": "Ingen individhistorik eller identifierande poster lagras.",
